@@ -146,5 +146,6 @@ if __name__ == "__main__":
     # A list contains all family elements, you can use it as a parameter.
     families = [i for i in root_child_elements if isinstance(i, FamilyElement)]
 
+    # Call your functions from here.
     pretty_individuals(individuals)
     pretty_families(families, individuals)
