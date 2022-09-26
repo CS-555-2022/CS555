@@ -128,6 +128,27 @@ def pretty_families(families, individuals):
     print("Families")
     print(t.get_string())
 
+# US24
+def check_unique_families(families):
+    remainder = {}
+    for f in families:
+        husband_id = ""
+        wife_id = ""
+        married_date = ""
+        for n in f.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                married_date = datetime.strptime(
+                    n.get_child_elements()[0].get_value(), "%d %b %Y"
+                ).strftime("%Y-%m-%d")
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                husband_id = n.get_value()
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
+                wife_id = n.get_value()
+        if remainder.get((husband_id, wife_id)) == married_date:
+              print("ERROR: FAMILY: US24: {}: more than one families have same spouses and same marriage date.".format(clean_id(f.get_pointer())))
+        else:
+            remainder[(husband_id, wife_id)] = married_date
+
 
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
@@ -149,3 +170,4 @@ if __name__ == "__main__":
     # Call your functions from here.
     pretty_individuals(individuals)
     pretty_families(families, individuals)
+    check_unique_families(families)
