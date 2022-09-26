@@ -1,9 +1,8 @@
-0 NOTE https://github.com/CS-555-2022/CS555
 0 HEAD
 1 SOUR Family Echo
 2 WWW http://www.familyecho.com/
-1 FILE My Family
-1 DATE 5 SEP 2022
+1 FILE Family 2
+1 DATE 26 SEP 2022
 1 DEST ANSTFILE
 1 GEDC
 2 VERS 5.5.1
@@ -13,8 +12,9 @@
 1 SUBN
 1 CHAR UTF-8
 0 @I1@ INDI
-1 NAME Winston Cyan
+1 NAME Winston /Cyan/
 2 GIVN Winston
+2 SURN Cyan
 1 SEX M
 1 BIRT
 2 DATE 6 JUL 1972
@@ -30,22 +30,25 @@
 2 DATE 3 JUN 1974
 1 FAMS @F1@
 0 @I3@ INDI
-1 NAME Melina Cyan
-2 GIVN Melina Cyan
+1 NAME Melina /Cyan/
+2 GIVN Melina 
+2 SURN Cyan
 1 SEX M
 1 BIRT
 2 DATE 3 JAN 1999
 1 FAMC @F1@
 0 @I4@ INDI
-1 NAME Letha Cyan
-2 GIVN Letha Cyan
+1 NAME Letha /Cyan/
+2 GIVN Letha 
+2 SURN Cyan
 1 SEX F
 1 BIRT
 2 DATE 5 JUN 2001
 1 FAMC @F1@
 0 @I5@ INDI
-1 NAME Orson Cyan
-2 GIVN Orson Cyan
+1 NAME Orson /Cyan/
+2 GIVN Orson 
+2 SURN Cyan
 1 SEX M
 1 BIRT
 2 DATE 13 SEP 1952
@@ -71,35 +74,48 @@
 1 FAMS @F4@
 1 FAMC @F2@
 0 @I8@ INDI
-1 NAME Mansel Edward
-2 GIVN Mansel Edward
+1 NAME Pete /Johnie/
+2 GIVN Pete 
+2 SURN Johnie
+1 SEX M
+1 BIRT
+2 DATE 7 JUL 1975
+1 FAMS @F3@
+1 FAMS @F5@
+0 @I9@ INDI
+1 NAME Mansel /Edward/
+2 GIVN Mansel 
+2 SURN Edward
 1 SEX M
 1 BIRT
 2 DATE 10 JUN 1974
 1 DEAT Y
 2 DATE 8 AUG 2006
 1 FAMS @F4@
-0 @I9@ INDI
-1 NAME Jae Edward
-2 GIVN Jae Edward
+0 @I10@ INDI
+1 NAME Jae /Edward/
+2 GIVN Jae 
+2 SURN Edward
 1 SEX M
 1 BIRT
 2 DATE 12 MAR 2004
 1 FAMC @F4@
-0 @I10@ INDI
-1 NAME Pete Johnie
-2 GIVN Pete Johnie
-1 SEX M
-1 BIRT
-2 DATE 7 JUL 1975
-1 FAMS @F3@
 0 @I11@ INDI
-1 NAME Lilly Maple
-2 GIVN Lilly Maple
+1 NAME Lilly /Maple/
+2 GIVN Lilly 
+2 SURN Maple
 1 SEX F
 1 BIRT
 2 DATE 8 OCT 2011
 1 FAMC @F3@
+0 @I12@ INDI
+1 NAME Herrera /Simon/
+2 GIVN Herrera
+2 SURN Simon
+1 SEX F
+1 BIRT
+2 DATE 4 APR 1976
+1 FAMS @F5@
 0 @F1@ FAM
 1 HUSB @I1@
 1 WIFE @I2@
@@ -121,17 +137,26 @@
 1 _CURRENT Y
 1 _PRIMARY Y
 0 @F3@ FAM
-1 HUSB @I10@
+1 HUSB @I8@
 1 WIFE @I7@
 1 CHIL @I11@
 1 MARR
 2 DATE 9 JUL 2009
 1 _CURRENT Y
 1 _PRIMARY Y
-0 @F4@ FAM
+0 @F5@ FAM
 1 HUSB @I8@
+1 WIFE @I12@
+1 MARR
+2 DATE 4 JUN 2000
+1 DIV
+2 DATE 10 JUL 2006
+1 _CURRENT N
+1 _PRIMARY N
+0 @F4@ FAM
+1 HUSB @I9@
 1 WIFE @I7@
-1 CHIL @I9@
+1 CHIL @I10@
 1 MARR
 2 DATE 9 SEP 2001
 1 EVEN

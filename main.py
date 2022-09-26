@@ -65,6 +65,70 @@ def pretty_individuals(individuals):
     print(t.get_string())
 
 
+def pretty_families(families, individuals):
+    t = PrettyTable()
+    t.field_names = [
+        "ID",
+        "Married",
+        "Divorced",
+        "Husband ID",
+        "Husband Name",
+        "Wife ID",
+        "Wife Name",
+        "Children",
+    ]
+    for i in families:
+        f = []
+        f.append(clean_id(i.get_pointer()))
+        married_date = "N/A"
+        divorced_date = "N/A"
+        husband_id = ""
+        husband_name = ""
+        wife_id = ""
+        wife_name = ""
+        children = []
+        for n in i.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                married_date = datetime.strptime(
+                    n.get_child_elements()[0].get_value(), "%d %b %Y"
+                ).strftime("%Y-%m-%d")
+            if n.get_tag() == "DIV":
+                divorced_date = datetime.strptime(
+                    n.get_child_elements()[0].get_value(), "%d %b %Y"
+                ).strftime("%Y-%m-%d")
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                id = n.get_value()
+                husband_id = clean_id(id)
+                for p in individuals:
+                    if p.get_pointer() == id:
+                        (fist, last) = p.get_name()
+                        husband_name = fist + " " + "/" + last + "/"
+                        break
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
+                id = n.get_value()
+                wife_id = clean_id(id)
+                for p in individuals:
+                    if p.get_pointer() == id:
+                        (fist, last) = p.get_name()
+                        wife_name = fist + " " + "/" + last + "/"
+                        break
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD:
+                children.append("'" + clean_id(n.get_value()) + "'")
+        f.append(married_date)
+        f.append(divorced_date)
+        f.append(husband_id)
+        f.append(husband_name)
+        f.append(wife_id)
+        f.append(wife_name)
+        if children != []:
+            f.append("{" + ",".join(children) + "}")
+        else:
+            f.append("N/A")
+        t.add_row(f)
+    print("Families")
+    print(t.get_string())
+
+
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
     # DOCUMENT https://gedcom.nickreynke.dev/gedcom/index.html
@@ -80,6 +144,7 @@ if __name__ == "__main__":
     # A list contains all individual elements, you can use it as a parameter.
     individuals = [i for i in root_child_elements if isinstance(i, IndividualElement)]
     # A list contains all family elements, you can use it as a parameter.
-    familys = [i for i in root_child_elements if isinstance(i, FamilyElement)]
+    families = [i for i in root_child_elements if isinstance(i, FamilyElement)]
 
     pretty_individuals(individuals)
+    pretty_families(families, individuals)
