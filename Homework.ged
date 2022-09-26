@@ -1,3 +1,4 @@
+0 NOTE https://github.com/CS-555-2022/CS555
 0 HEAD
 1 SOUR Family Echo
 2 WWW http://www.familyecho.com/
@@ -116,6 +117,14 @@
 1 BIRT
 2 DATE 4 APR 1976
 1 FAMS @F5@
+0 @I13@ INDI
+1 NAME Melina /Cyan/
+2 GIVN Melina 
+2 SURN Cyan
+1 SEX M
+1 BIRT
+2 DATE 3 JAN 1999
+1 FAMC @F6@
 0 @F1@ FAM
 1 HUSB @I1@
 1 WIFE @I2@
@@ -168,7 +177,7 @@
 1 HUSB @I1@
 1 WIFE @I2@
 1 CHIL @I3@
-1 CHIL @I3@
+1 CHIL @I13@
 1 MARR
 2 DATE 14 AUG 1998
 1 EVEN

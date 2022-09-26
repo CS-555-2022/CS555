@@ -149,6 +149,19 @@ def check_unique_families(families):
         else:
             remainder[(husband_id, wife_id)] = married_date
 
+# US25
+def check_unique_first_name(families, individuals):
+    for f in families:
+        remainder = []
+        for n in f.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD:
+                for i in individuals:
+                    if i.get_pointer() == n.get_value():
+                        if i.get_name() in remainder:
+                            (first, _) = i.get_name()
+                            print("ERROR: FAMILY: US24: {}: in a family have more than one children have same first name: {}.".format(clean_id(f.get_pointer()), first))
+                        else:
+                            remainder.append(i.get_name())
 
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
@@ -171,3 +184,4 @@ if __name__ == "__main__":
     pretty_individuals(individuals)
     pretty_families(families, individuals)
     check_unique_families(families)
+    check_unique_first_name(families, individuals)
