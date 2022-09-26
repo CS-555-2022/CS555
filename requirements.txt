@@ -1,1 +1,3 @@
+prettytable==3.4.1
 python-gedcom==1.0.0
+wcwidth==0.2.5
