@@ -6,7 +6,9 @@ from prettytable import PrettyTable
 from datetime import datetime, date
 import gedcom.tags
 import sys
-
+# from US30 import *
+# from US31 import *
+from US30_31_help_code import *
 
 def calculate_age(dtob):
     today = date.today()
@@ -163,6 +165,33 @@ def check_unique_first_name(families, individuals):
                         else:
                             remainder.append(i.get_name())
 
+# US30
+file_name = sys.argv[1]
+info = get_info(file_name)
+
+def list_married():
+    for fam in info['families']:	
+        if fam['married'] != None:
+            print(" Married people (husband, wife): " + str(fam['husband_name']) + str(fam['wife_name']))
+    return 0
+
+# US31
+def list_single():
+	file_name = sys.argv[1]
+	info = get_info(file_name)
+	alone_forever = []
+	for ind in info['individuals']:
+		birth = ind['birthday']
+		dt = datetime.datetime.now() - datetime.timedelta(days=30*365)
+		if birth < dt and ind['spouse'] == None:
+			alone_forever.append(ind['id'])
+
+	if len(alone_forever) == 0:
+		return 1
+	else:
+		print(alone_forever)
+	return 0
+
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
     # DOCUMENT https://gedcom.nickreynke.dev/gedcom/index.html
@@ -185,3 +214,5 @@ if __name__ == "__main__":
     pretty_families(families, individuals)
     if check_unique_families(families): print(check_unique_families(families))
     if check_unique_first_name(families, individuals): print(check_unique_first_name(families, individuals))
+    list_married()
+    list_single()
