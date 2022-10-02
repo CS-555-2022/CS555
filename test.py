@@ -4,6 +4,10 @@ from gedcom.element.individual import IndividualElement
 from gedcom.element.family import FamilyElement
 from main import check_unique_first_name
 from main import check_unique_families 
+from main import *
+from unittest.mock import patch
+import sys
+
 
 NO_CHILD_TEST_EXAMPLE = "./testged/NO_CHILD_EXAMPLE.ged"
 ONE_CHILD_TEST_EXAMPLE = "./testged/ONE_CHILD_EXAMPLE.ged"
@@ -45,6 +49,28 @@ class TestClass(unittest.TestCase):
     def test_unique_family(self):
         (families, individuals) = help_paser_ged(TWO_SAME_FAMILY_TEST_EXAMPLE)
         self.assertNotEqual(check_unique_families(families), None)
+    
+class test_us30_1(unittest.TestCase):
+	@patch.object(sys, 'argv', ['main.py', 'Homework.ged'])
+	def test_list_married(self):
+		self.assertEqual(list_married(), 0)
 
+class test_us30_2(unittest.TestCase):
+	@patch.object(sys, 'argv', ['main.py', 'ONE_CHILD_TEST_EXAMPLE'])
+	def test_list_married(self):
+		self.assertEqual(list_married(), 0)
+  
+class test_us30_3(unittest.TestCase):
+	@patch.object(sys, 'argv', ['main.py', 'NO_CHILD_TEST_EXAMPLE'])
+	def test_list_married(self):
+		self.assertEqual(list_married(), 0)
+    
+class test_us31(unittest.TestCase):
+	@patch.object(sys, 'argv', ['main.py','Homework.ged'])
+	def test_living_singles(self):
+		self.assertNotEqual(list_single(), 0)
+
+
+  
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(argv=[sys.argv[0]])
