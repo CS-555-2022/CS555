@@ -145,7 +145,7 @@ def check_unique_families(families):
             if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
                 wife_id = n.get_value()
         if remainder.get((husband_id, wife_id)) == married_date:
-              print("ERROR: FAMILY: US24: {}: more than one families have same spouses and same marriage date.".format(clean_id(f.get_pointer())))
+              return "ERROR: FAMILY: US24: {}: more than one families have same spouses and same marriage date.".format(clean_id(f.get_pointer()))
         else:
             remainder[(husband_id, wife_id)] = married_date
 
@@ -159,7 +159,7 @@ def check_unique_first_name(families, individuals):
                     if i.get_pointer() == n.get_value():
                         if i.get_name() in remainder:
                             (first, _) = i.get_name()
-                            print("ERROR: FAMILY: US24: {}: in a family have more than one children have same first name: {}.".format(clean_id(f.get_pointer()), first))
+                            return "ERROR: FAMILY: US24: {}: in a family have more than one children have same first name: {}.".format(clean_id(f.get_pointer()), first)
                         else:
                             remainder.append(i.get_name())
 
@@ -183,5 +183,5 @@ if __name__ == "__main__":
     # Call your functions from here.
     pretty_individuals(individuals)
     pretty_families(families, individuals)
-    check_unique_families(families)
-    check_unique_first_name(families, individuals)
+    if check_unique_families(families): print(check_unique_families(families))
+    if check_unique_first_name(families, individuals): print(check_unique_first_name(families, individuals))
