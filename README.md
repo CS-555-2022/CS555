@@ -24,3 +24,13 @@ Deactive the virtual environment.
 ```
 deactivate
 ```
+
+Run main.py
+```
+python main.py Homework.ged
+```
+
+Run Test.
+```
+python -Wi test.py -v
+```
