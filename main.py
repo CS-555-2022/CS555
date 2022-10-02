@@ -3,7 +3,7 @@ from gedcom.element.individual import IndividualElement
 from gedcom.element.family import FamilyElement
 from gedcom.parser import Parser
 from prettytable import PrettyTable
-from datetime import datetime, date
+from datetime import date
 import gedcom.tags
 import sys
 # from US30 import *
@@ -38,12 +38,12 @@ def pretty_individuals(individuals):
         (first, last) = i.get_name()
         f.append(first + " " + last)
         f.append(i.get_gender())
-        birthday = datetime.strptime(i.get_birth_data()[0], "%d %b %Y")
+        birthday = datetime.datetime.strptime(i.get_birth_data()[0], "%d %b %Y")
         f.append(birthday.strftime("%Y-%m-%d"))
         f.append(calculate_age(birthday))
         f.append(not i.is_deceased())
         if i.get_death_data()[0] != "":
-            deathday = datetime.strptime(i.get_death_data()[0], "%d %b %Y")
+            deathday = datetime.datetime.strptime(i.get_death_data()[0], "%d %b %Y")
             f.append(deathday.strftime("%Y-%m-%d"))
         else:
             f.append("N/A")
@@ -91,11 +91,11 @@ def pretty_families(families, individuals):
         children = []
         for n in i.get_child_elements():
             if n.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
-                married_date = datetime.strptime(
+                married_date = datetime.datetime.strptime(
                     n.get_child_elements()[0].get_value(), "%d %b %Y"
                 ).strftime("%Y-%m-%d")
             if n.get_tag() == "DIV":
-                divorced_date = datetime.strptime(
+                divorced_date = datetime.datetime.strptime(
                     n.get_child_elements()[0].get_value(), "%d %b %Y"
                 ).strftime("%Y-%m-%d")
             if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
@@ -139,7 +139,7 @@ def check_unique_families(families):
         married_date = ""
         for n in f.get_child_elements():
             if n.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
-                married_date = datetime.strptime(
+                married_date = datetime.datetime.strptime(
                     n.get_child_elements()[0].get_value(), "%d %b %Y"
                 ).strftime("%Y-%m-%d")
             if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
