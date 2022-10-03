@@ -4,6 +4,7 @@ from gedcom.element.individual import IndividualElement
 from gedcom.element.family import FamilyElement
 from main import check_unique_first_name
 from main import check_unique_families 
+from main import marry_after_14
 from main import *
 from unittest.mock import patch
 import sys
@@ -15,6 +16,13 @@ TWO_CHILDREN_WITHOUT_SAME_NAME_TEST_EXAMPLE = "./testged/TWO_CHILDREN_WITHOUT_SA
 TWO_CHILDREN_WITH_SAME_NAME_TEST_EXAMPLE = "./testged/TWO_CHILDREN_WITH_SAME_NAME.ged"
 THREE_CHILDREN_WITH_SAME_NAME_TEST_EXAMPLE = "./testged/THREE_CHILDREN_WITH_SAME_NAME.ged"
 TWO_SAME_FAMILY_TEST_EXAMPLE = "./testged/TWO_SAME_FAMILY.ged"
+
+#US10 Test file
+NO_MARRYERROR = "./testged/NO_MARRYERROR.ged"
+ONE_MARRYERROR = "./testged/ONE_MARRYERROR.ged"
+TWO_MARRYERROR = "./testged/TWO_MARRYERROR.ged"
+THREE_MARRYERROR = "./testged/THREE_MARRYERROR.ged"
+ONEPAIR_MARRYERROR = "./testged/ONEPAIR_MARRYERROR.ged"
 
 #You can use this function to get families and individuals
 def help_paser_ged(ged):
@@ -49,7 +57,29 @@ class TestClass(unittest.TestCase):
     def test_unique_family(self):
         (families, individuals) = help_paser_ged(TWO_SAME_FAMILY_TEST_EXAMPLE)
         self.assertNotEqual(check_unique_families(families), None)
-    
+
+    #US10 Test
+    def test_no_marryerror(self):
+        (families, individuals) = help_paser_ged(NO_MARRYERROR)
+        self.assertEqual(marry_after_14(families, individuals), None)
+
+    def test_one_marryerror(self):
+        (families, individuals) = help_paser_ged(ONE_MARRYERROR)
+        self.assertEqual(marry_after_14(families, individuals), None)
+
+    def test_two_marryerror(self):
+        (families, individuals) = help_paser_ged(TWO_MARRYERROR)
+        self.assertEqual(marry_after_14(families, individuals), None)
+
+    def test_three_marryerror(self):
+        (families, individuals) = help_paser_ged(THREE_MARRYERROR)
+        self.assertEqual(marry_after_14(families, individuals), None)
+
+    def test_onepair_marryerror(self):
+        (families, individuals) = help_paser_ged(ONEPAIR_MARRYERROR)
+        self.assertEqual(marry_after_14(families, individuals), None)
+
+
 class test_us30_1(unittest.TestCase):
 	@patch.object(sys, 'argv', ['main.py', 'Homework.ged'])
 	def test_list_married(self):
