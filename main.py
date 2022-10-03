@@ -192,6 +192,48 @@ def list_single():
 		print(alone_forever)
 	return 0
 
+# US07
+def less_than_150(individuals):
+    thisYear = date.today().year
+    for i in individuals:
+        death = i.get_death_year()
+        birth = i.get_birth_year()
+        if death != -1 and death - birth >= 150:
+            return "ERROR: INDIVIDAL: US07: Death should be less than 150 years after birth for dead people, and current date should be less than 150 years after birth for all living people, NAME: {}.".format('-'.join(str(x) for x in i.get_name()))
+        elif death == -1 and thisYear - birth >= 150:
+            return "ERROR: INDIVIDAL: US07: Death should be less than 150 years after birth for dead people, and current date should be less than 150 years after birth for all living people, NAME: {}.".format('-'.join(str(x) for x in i.get_name()))
+    
+# US10
+def marry_after_14(families,individuals):
+    married_year = ""
+    husband_ID = ""
+    wife_ID = ""
+    husName = ""
+    wifeName = ""
+    husBirthYear = ""
+    wifeBirthYear = ""
+    for fam in families:
+        for n in fam.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                married_year = datetime.datetime.strptime(n.get_child_elements()[0].get_value(), "%d %b %Y").strftime("%Y")
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                husband_ID = n.get_value()
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
+                wife_ID = n.get_value()
+        for m in individuals:
+            if m.get_pointer() == husband_ID:
+                husName = '-'.join(str(x) for x in m.get_name())
+                husBirthYear = m.get_birth_year()
+            if m.get_pointer() == wife_ID:
+                wifeName = '-'.join(str(x) for x in m.get_name())
+                wifeBirthYear = m.get_birth_year()
+        #print(married_year,husBirthYear,wifeBirthYear,husName,wifeName)   
+        if int(married_year) - int(husBirthYear) < 14 or int(married_year) - int(wifeBirthYear) < 14:
+                return "ERROR: INDIVIDAL: US10: Marriage should be at least 14 years after birth of both spouses, NAME: {} and {}.".format(husName, wifeName)
+        
+
+
+
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
     # DOCUMENT https://gedcom.nickreynke.dev/gedcom/index.html
@@ -216,3 +258,5 @@ if __name__ == "__main__":
     if check_unique_first_name(families, individuals): print(check_unique_first_name(families, individuals))
     list_married()
     list_single()
+    if less_than_150(individuals): print(less_than_150(individuals))
+    if marry_after_14(families,individuals): print(marry_after_14(families,individuals))
