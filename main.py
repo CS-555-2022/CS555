@@ -10,6 +10,7 @@ import sys
 # from US31 import *
 from US30_31_help_code import *
 
+#(US27)
 def calculate_age(dtob):
     today = date.today()
     return today.year - dtob.year - ((today.month, today.day) < (dtob.month, dtob.day))
@@ -151,6 +152,18 @@ def check_unique_families(families):
         else:
             remainder[(husband_id, wife_id)] = married_date
 
+
+# US23
+def check_dupplicates_name_dob(individuals):
+    check_list=[]
+    for individual in individuals:
+        check_list.append((individual.get_name(),individual.get_birth_data()))
+    dup = [individuals[check_list.index(person,ind_p)].get_pointer() for ind_p,person in enumerate(check_list) if check_list.count(person) > 1]
+    if len(dup)!=0 :
+        return "ERROR: INDIVIDUAL: US23: {}: Duplicates with same name and date of birth appear.".format(dup)
+
+
+
 # US25
 def check_unique_first_name(families, individuals):
     for f in families:
@@ -258,5 +271,6 @@ if __name__ == "__main__":
     if check_unique_first_name(families, individuals): print(check_unique_first_name(families, individuals))
     list_married()
     list_single()
+    if check_dupplicates_name_dob(individuals): print(check_dupplicates_name_dob(individuals))
     if less_than_150(individuals): print(less_than_150(individuals))
     if marry_after_14(families,individuals): print(marry_after_14(families,individuals))
