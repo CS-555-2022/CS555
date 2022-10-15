@@ -244,8 +244,44 @@ def marry_after_14(families,individuals):
         if int(married_year) - int(husBirthYear) < 14 or int(married_year) - int(wifeBirthYear) < 14:
                 return "ERROR: INDIVIDAL: US10: Marriage should be at least 14 years after birth of both spouses, NAME: {} and {}.".format(husName, wifeName)
         
+# US21 
+def correct_gender(families, individuals):
+    result = None
+    for f in families:
+        for n in f.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                for i in individuals:
+                    if i.get_pointer() == n.get_value():
+                       for child in i.get_child_elements():
+                           if child.get_tag() == gedcom.tags.GEDCOM_TAG_SEX:
+                                if child.get_value() != "M":
+                                    result = f.get_pointer()
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
+                for i in individuals:
+                    if i.get_pointer() == n.get_value():
+                       for child in i.get_child_elements():
+                           if child.get_tag() == gedcom.tags.GEDCOM_TAG_SEX:
+                                if child.get_value() != "F":
+                                    result = f.get_pointer()
+    if result:
+        return "ERROR: INDIVIDAL: US21: {} familiy's gender is not correct".format(result)
 
-
+#US 22
+def unique_id(families, individuals):
+    remainder = {}
+    result = []
+    for f in families:
+        if f.get_pointer() in remainder:
+            result.append(f.get_pointer())
+        else:
+            remainder[f.get_pointer()] = True
+    for i in individuals:
+        if i.get_pointer() in remainder:
+            result.append(i.get_pointer())
+        else:
+            remainder[i.get_pointer()] = True
+    if result != []:
+        return "ERROR: INDIVIDAL: US22: {} is not unique".format(result)
 
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
@@ -274,3 +310,5 @@ if __name__ == "__main__":
     if check_dupplicates_name_dob(individuals): print(check_dupplicates_name_dob(individuals))
     if less_than_150(individuals): print(less_than_150(individuals))
     if marry_after_14(families,individuals): print(marry_after_14(families,individuals))
+    if correct_gender(families, individuals): print(correct_gender(families, individuals))
+    if unique_id(families, individuals): print(unique_id(families, individuals))

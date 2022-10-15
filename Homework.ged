@@ -87,7 +87,7 @@
 1 NAME Mansel /Edward/
 2 GIVN Mansel 
 2 SURN Edward
-1 SEX M
+1 SEX F
 1 BIRT
 2 DATE 10 JUN 1974
 1 DEAT Y
@@ -173,7 +173,7 @@
 1 _CURRENT N
 1 _PRIMARY N
 0 TRLR
-0 @F6@ FAM
+0 @F4@ FAM
 1 HUSB @I1@
 1 WIFE @I2@
 1 CHIL @I3@
