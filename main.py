@@ -300,6 +300,47 @@ def marry_after_14(families,individuals):
         #print(married_year,husBirthYear,wifeBirthYear,husName,wifeName)   
         if int(married_year) - int(husBirthYear) < 14 or int(married_year) - int(wifeBirthYear) < 14:
                 return "ERROR: INDIVIDAL: US10: Marriage should be at least 14 years after birth of both spouses, NAME: {} and {}.".format(husName, wifeName)
+
+# US02
+def birth_before_marriage02(families,individuals):
+    married_date = ""
+    husband_ID = ""
+    wife_ID = ""
+    husName = ""
+    wifeName = ""
+    husBirthDate = ""
+    wifeBirthDate = ""
+    for fam in families:
+        for n in fam.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                married_date = datetime.datetime.strptime(n.get_child_elements()[0].get_value(), "%d %b %Y")
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                husband_ID = n.get_value()
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
+                wife_ID = n.get_value()
+        for m in individuals:
+            if m.get_pointer() == husband_ID:
+                husName = '-'.join(str(x) for x in m.get_name())
+                husBirthDate = datetime.datetime.strptime(m.get_birth_data()[0], "%d %b %Y")
+            if m.get_pointer() == wife_ID:
+                wifeName = '-'.join(str(x) for x in m.get_name())
+                wifeBirthDate = datetime.datetime.strptime(m.get_birth_data()[0], "%d %b %Y")
+        #print(married_date,husBirthDate,wifeBirthDate,husName,wifeName)   
+        if married_date <= husBirthDate:
+            return "ERROR: INDIVIDAL: US02: Birth should occur before marriage of an individual, NAME: {}.".format(husName)
+        if married_date <= wifeBirthDate:
+            return "ERROR: INDIVIDAL: US02: Birth should occur before marriage of an individual, NAME: {}.".format(wifeName)
+
+# US03
+def birth_before_death03(individuals):
+    birth_date = ""
+    death_date = ""
+    for i in individuals:
+        birth_date = datetime.datetime.strptime(i.get_birth_data()[0], "%d %b %Y")
+        if i.get_death_data()[0] != "":
+            death_date = datetime.datetime.strptime(i.get_death_data()[0], "%d %b %Y")
+            if death_date <= birth_date:
+                return "ERROR: INDIVIDAL: US03: Birth should occur before death of an individual, NAME: {}.".format('-'.join(str(x) for x in i.get_name()))
      
      
 # US21 
@@ -448,3 +489,5 @@ if __name__ == "__main__":
     if unique_id(families, individuals): print(unique_id(families, individuals))
     if birth_before_marriage(families, individuals): print(birth_before_marriage(families, individuals))
     if birth_after_death(families, individuals): print(birth_after_death(families, individuals))
+    if birth_before_marriage02(families,individuals): print(birth_before_marriage02(families,individuals))
+    if birth_before_death03(individuals): print(birth_before_death03(individuals))
