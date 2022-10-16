@@ -1,3 +1,4 @@
+import datetime
 import sys
 from datetime import date
 
@@ -8,9 +9,7 @@ from gedcom.element.individual import IndividualElement
 from gedcom.parser import Parser
 from prettytable import PrettyTable
 
-# from US30 import *
-# from US31 import *
-from US30_31_help_code import *
+# from US30_31_help_code import *
 
 
 #(US27)
@@ -182,15 +181,46 @@ def check_unique_first_name(families, individuals):
                             remainder.append(i.get_name())
 
 # US30
-file_name = sys.argv[1]
-info = get_info(file_name)
 
-def list_married():
-    for fam in info['families']:	
-        if fam['married'] != None:
-            print(" Married people (husband, wife): " + str(fam['husband_name']) + str(fam['wife_name']))
-    return 0
+# file_name = sys.argv[1]
+# info = get_info(file_name)
 
+# def list_married():
+#     for fam in info['families']:	
+#         if fam['married'] != None:
+#             print(" Married people (husband, wife): " + str(fam['husband_name']) + str(fam['wife_name']))
+#     return 0
+
+def list_married(families, individuals):
+    for fam in families:
+        for f in fam.get_child_elements():
+            if f.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
+                wife_id = f.get_value()
+
+            if f.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                husband_id = f.get_value()
+                
+        # print(wife_id, husband_id)
+        for i in individuals:
+            if i.get_pointer() == wife_id:
+                wife = i.get_name()
+                wife_name = ""
+                for n in wife:
+                    wife_name += " " + str(n)
+                wife_name = wife_name.strip()
+                # print(wife_name)
+            if i.get_pointer() == husband_id:
+                husband = i.get_name()
+                husband_name = ""
+                for n in husband:
+                    husband_name += " " + str(n)
+                husband_name = husband_name.strip()
+                # print(husband_name)
+        print(" Married people (husband, wife): " + husband_name + wife_name)
+        # name_list.append(" Married people (husband, wife): " + husband_name + wife_name)
+    # print(name_list)
+        
+            
 # US31
 def list_single():
 	file_name = sys.argv[1]
@@ -383,8 +413,10 @@ if __name__ == "__main__":
     pretty_families(families, individuals)
     if check_unique_families(families): print(check_unique_families(families))
     if check_unique_first_name(families, individuals): print(check_unique_first_name(families, individuals))
-    list_married()
-    list_single()
+    # list_married()
+    # list_single()
+    list_married(families, individuals)
+    list_single(families, individuals)
     if check_dupplicates_name_dob(individuals): print(check_dupplicates_name_dob(individuals))
     if less_than_150(individuals): print(less_than_150(individuals))
     if marry_after_14(families,individuals): print(marry_after_14(families,individuals))
