@@ -222,21 +222,45 @@ def list_married(families, individuals):
         
             
 # US31
-def list_single():
-	file_name = sys.argv[1]
-	info = get_info(file_name)
-	alone_forever = []
-	for ind in info['individuals']:
-		birth = ind['birthday']
-		dt = datetime.datetime.now() - datetime.timedelta(days=30*365)
-		if birth < dt and ind['spouse'] == None:
-			alone_forever.append(ind['id'])
 
-	if len(alone_forever) == 0:
-		return 1
-	else:
-		print(alone_forever)
-	return 0
+# def list_single():
+# 	file_name = sys.argv[1]
+# 	info = get_info(file_name)
+# 	alone_forever = []
+# 	for ind in info['individuals']:
+# 		birth = ind['birthday']
+# 		dt = datetime.datetime.now() - datetime.timedelta(days=30*365)
+# 		if birth < dt and ind['spouse'] == None:
+# 			alone_forever.append(ind['id'])
+
+# 	if len(alone_forever) == 0:
+# 		return 1
+# 	else:
+# 		print(alone_forever)
+# 	return 0
+
+def list_single(families, individuals):
+    married = set()
+    for fam in families:
+        for f in fam.get_child_elements():
+            # print(f)
+            if f.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE or f.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                married.add(f.get_value())
+        
+    # print(married)
+    alone = []
+    for i in individuals:
+        if i.get_pointer() not in married:
+            birth = i.get_birth_year()
+            # print(birth)
+            diff = datetime.datetime.today().year - birth
+            # print(diff)
+            if diff > 30:
+                alone.append(i.get_pointer())
+    if alone:
+        print(alone)
+    else:
+        return 0
 
 # US07
 def less_than_150(individuals):
