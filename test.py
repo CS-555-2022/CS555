@@ -33,6 +33,13 @@ TWO_MARRYERROR = "./testged/TWO_MARRYERROR.ged"
 THREE_MARRYERROR = "./testged/THREE_MARRYERROR.ged"
 ONEPAIR_MARRYERROR = "./testged/ONEPAIR_MARRYERROR.ged"
 
+# US02 Test file
+ONE_DEATHERROR = "./testged/ONE_DeathBeforeBirth.ged"
+TWO_DEATHERROR = "./testged/TWO_DeathBeforeBirth.ged"
+# US03 Test file
+ONE_MbeforeD = "./testged/ONE_MbefD.ged"
+TWO_MbeforeD = "./testged/TWO_MbefD.ged"
+
 # You can use this function to get families and individuals
 def help_paser_ged(ged):
     gedcom_parser = Parser()
@@ -117,6 +124,24 @@ class TestClass(unittest.TestCase):
     def test_onepair_marryerror(self):
         (families, individuals) = help_paser_ged(ONEPAIR_MARRYERROR)
         self.assertEqual(marry_after_14(families, individuals), None)
+
+    # US02 Test
+    def test_one_marriageerror(self):
+        (families, individuals) = help_paser_ged(ONE_MbeforeD)
+        self.assertEqual(birth_before_marriage02(families,individuals), None)
+
+    def test_two_marriageerror(self):
+        (families, individuals) = help_paser_ged(TWO_MbeforeD)
+        self.assertEqual(birth_before_marriage02(families,individuals), None)
+
+    # US03 Test
+    def test_one_deatherror(self):
+        (families, individuals) = help_paser_ged(ONE_DEATHERROR)
+        self.assertEqual(birth_before_death03(individuals), None)
+
+    def test_two_deatherror(self):
+        (families, individuals) = help_paser_ged(TWO_DEATHERROR)
+        self.assertEqual(birth_before_death03(individuals), None)
 
     # US21
     def test_correct_gender(self):
