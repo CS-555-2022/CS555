@@ -1,14 +1,17 @@
+import sys
+from datetime import date
+
+import gedcom.tags
 from gedcom.element.element import Element
-from gedcom.element.individual import IndividualElement
 from gedcom.element.family import FamilyElement
+from gedcom.element.individual import IndividualElement
 from gedcom.parser import Parser
 from prettytable import PrettyTable
-from datetime import date
-import gedcom.tags
-import sys
+
 # from US30 import *
 # from US31 import *
 from US30_31_help_code import *
+
 
 #(US27)
 def calculate_age(dtob):
@@ -243,7 +246,8 @@ def marry_after_14(families,individuals):
         #print(married_year,husBirthYear,wifeBirthYear,husName,wifeName)   
         if int(married_year) - int(husBirthYear) < 14 or int(married_year) - int(wifeBirthYear) < 14:
                 return "ERROR: INDIVIDAL: US10: Marriage should be at least 14 years after birth of both spouses, NAME: {} and {}.".format(husName, wifeName)
-        
+     
+     
 # US21 
 def correct_gender(families, individuals):
     result = None
@@ -283,6 +287,80 @@ def unique_id(families, individuals):
     if result != []:
         return "ERROR: INDIVIDAL: US22: {} is not unique".format(result)
 
+
+# US 08
+def birth_before_marriage(families,individuals):
+    parent_children = []
+    for fam in families:
+        for f in fam.get_child_elements():
+            # print(f)
+            if f.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                # print(f.get_child_elements())
+                # print(datetime.datetime.strptime(f.get_child_elements()[0].get_value(), "%d %b %Y"))
+                married_data = datetime.datetime.strptime(f.get_child_elements()[0].get_value(), "%d %b %Y")
+                # print(married_data)
+            if f.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD:
+                child_ID = f.get_value()
+                # print(child_ID)
+            
+        for i in individuals:
+            if i.get_pointer() == child_ID:
+                # print(i.get_birth_data())
+                
+                childBirth = datetime.datetime.strptime(i.get_birth_data()[0], "%d %b %Y")
+                # print(married_data, child_ID, childBirth)
+                parent_children.append((married_data, child_ID, childBirth))
+                
+    # print(parent_children)     
+    cnt = 0      
+    for pair in parent_children:
+        # print(pair)
+        married_day = pair[0]
+        child_birth = pair[2]
+        child = pair[1]
+        # print(child_birth, married_day)
+        if(child_birth < married_day):
+            print("ANOMALY: FAMILY: US08: " + " Child " + str(child) + " born " + str(child_birth) + " before marriage on " + str(married_day))
+            cnt += 1
+        
+    # print(cnt)   
+    return cnt        
+
+
+# US 9
+def birth_after_death(families, individuals):
+    child_parent = []
+            
+    for fam in families:
+        for f in fam.get_child_elements():
+            for i in individuals:
+                death = i.get_death_year()
+                if death != -1:
+                    death_date = datetime.datetime.strptime(i.get_death_data()[0], "%d %b %Y")    
+                else:
+                    death_date = None
+                
+                if f.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD:
+                    # print(f.get_value())
+                    if f.get_value() == i.get_pointer():
+                        childBirth = datetime.datetime.strptime(i.get_birth_data()[0], "%d %b %Y")
+                        # print(death_date,childBirth)
+                        child_parent.append((death_date, f.get_value(), childBirth))
+    
+    cnt = 0
+    for pair in child_parent:
+        death_day = pair[0]
+        child_id = pair[1]
+        child_birth = pair[2]
+        if death_day and death_day < child_birth:
+            print("ERROR: FAMILY: US09: " + child_id + ": Birthday " + child_birth + " born before parents death day: " + death_day)
+            cnt += 1
+    return cnt                   
+                        
+            
+
+
+
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
     # DOCUMENT https://gedcom.nickreynke.dev/gedcom/index.html
@@ -312,3 +390,5 @@ if __name__ == "__main__":
     if marry_after_14(families,individuals): print(marry_after_14(families,individuals))
     if correct_gender(families, individuals): print(correct_gender(families, individuals))
     if unique_id(families, individuals): print(unique_id(families, individuals))
+    if birth_before_marriage(families, individuals): print(birth_before_marriage(families, individuals))
+    if birth_after_death(families, individuals): print(birth_after_death(families, individuals))

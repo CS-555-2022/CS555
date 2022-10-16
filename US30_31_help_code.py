@@ -1,8 +1,9 @@
 # Yiwen Wang
 
-import sys
-import re
 import datetime
+import re
+import sys
+
 from prettytable import PrettyTable
 
 tags = ["INDI", "NAME", "SEX", "BIRT", "DEAT",  "FAMC", "FAMS", "FAM", "MARR", "HUSB", "WIFE", "CHIL", "DIV", "DATE", "HEAD", "TRLR", "NOTE"]

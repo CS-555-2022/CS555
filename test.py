@@ -127,6 +127,24 @@ class TestClass(unittest.TestCase):
     def test_unique_id(self):
         (families, individuals) = help_paser_ged(UNIQUE_ID_EXAMPLE)
         self.assertIsNotNone(unique_id(families, individuals))
+        
+    # US 08
+    def test_birth_before_marriage(self):
+        (families, individuals) = help_paser_ged(WRONG_GENDER_EXAMPLE)
+        self.assertEqual(birth_before_marriage(families, individuals), None)
+    
+    def test_birth_before_marriage(self):
+        (families, individuals) = help_paser_ged(WRONG_GENDER_EXAMPLE)
+        self.assertIsNotNone(birth_before_marriage(families, individuals))
+    
+    # US 09
+    def test_birth_after_death(self):
+        (families, individuals) = help_paser_ged(WRONG_GENDER_EXAMPLE)
+        self.assertEqual(birth_after_death(families, individuals), None)
+    
+    def test_birth_after_death(self):
+        (families, individuals) = help_paser_ged(WRONG_GENDER_EXAMPLE)
+        self.assertIsNotNone(birth_after_death(families, individuals))
 
 
 class test_us30_1(unittest.TestCase):
