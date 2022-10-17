@@ -8,7 +8,7 @@ from gedcom.parser import Parser
 
 from main import *
 from main import (check_dupplicates_name_dob, check_unique_families,
-                  check_unique_first_name, marry_after_14)
+                  check_unique_first_name, marry_after_14,birth_before_marriage02,birth_before_death03)
 
 NO_CHILD_TEST_EXAMPLE = "./testged/NO_CHILD_EXAMPLE.ged"
 ONE_CHILD_TEST_EXAMPLE = "./testged/ONE_CHILD_EXAMPLE.ged"
