@@ -327,21 +327,26 @@ def birth_before_marriage02(families,individuals):
                 wifeBirthDate = datetime.datetime.strptime(m.get_birth_data()[0], "%d %b %Y")
         #print(married_date,husBirthDate,wifeBirthDate,husName,wifeName)   
         if married_date <= husBirthDate:
-            return "ERROR: INDIVIDAL: US02: Birth should occur before marriage of an individual, NAME: {}.".format(husName)
+            print( "ERROR: INDIVIDAL: US02: Birth should occur before marriage of an individual, NAME: {}.".format(husName))
         if married_date <= wifeBirthDate:
-            return "ERROR: INDIVIDAL: US02: Birth should occur before marriage of an individual, NAME: {}.".format(wifeName)
+            print( "ERROR: INDIVIDAL: US02: Birth should occur before marriage of an individual, NAME: {}.".format(wifeName))
 
 # US03
 def birth_before_death03(individuals):
     birth_date = ""
     death_date = ""
+    currentname = ""
     for i in individuals:
         birth_date = datetime.datetime.strptime(i.get_birth_data()[0], "%d %b %Y")
+        currentname = '-'.join(str(x) for x in i.get_name())
         if i.get_death_data()[0] != "":
             death_date = datetime.datetime.strptime(i.get_death_data()[0], "%d %b %Y")
-            if death_date <= birth_date:
-                return "ERROR: INDIVIDAL: US03: Birth should occur before death of an individual, NAME: {}.".format('-'.join(str(x) for x in i.get_name()))
-     
+        else:
+            death_date = "N/A"
+        #print(death_date, birth_date, currentname)
+        if death_date != "N/A" and death_date <= birth_date:
+            print( "ERROR: INDIVIDAL: US03: Birth should occur before death of an individual, NAME: {}.".format(currentname))
+    
      
 # US21 
 def correct_gender(families, individuals):
