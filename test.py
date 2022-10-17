@@ -33,6 +33,16 @@ TWO_MARRYERROR = "./testged/TWO_MARRYERROR.ged"
 THREE_MARRYERROR = "./testged/THREE_MARRYERROR.ged"
 ONEPAIR_MARRYERROR = "./testged/ONEPAIR_MARRYERROR.ged"
 
+#US01 Test files
+BIRTH_DATES_AFTER_TODAY= "./testged/BIRTH_DATES_AFTER_TODAY.ged"
+DEATH_DATES_AFTER_TODAY= "./testged/DEATH_DATES_AFTER_TODAY.ged"
+DIVORCED_DATE_AFTER_TODAY= "./testged/DIVORCED_DATE_AFTER_TODAY.ged"
+MARRIED_DATE_AFTER_TODAY= "./testged/MARRIED_DATE_AFTER_TODAY.ged"
+
+#US13 Test files
+MORE_THAN_FIVE_SIBLINGS="./testged/MORE_THAN_FIVE_SIBLINGS.ged"
+NORMAL = "./testged/NORMAL.ged"
+
 # US02 Test file
 ONE_DEATHERROR = "./testged/ONE_DeathBeforeBirth.ged"
 TWO_DEATHERROR = "./testged/TWO_DeathBeforeBirth.ged"
@@ -96,13 +106,55 @@ class TestClass(unittest.TestCase):
 
     def test_same_name_example(self):
         (families, individuals) = help_paser_ged(
-            TWO_CHILDREN_WITH_SAME_NAME_TEST_EXAMPLE
-        )
+            TWO_CHILDREN_WITH_SAME_NAME_TEST_EXAMPLE)
         self.assertEqual(check_dupplicates_name_dob(individuals), None)
 
     def test_one_child_example(self):
         (families, individuals) = help_paser_ged(ONE_CHILD_TEST_EXAMPLE)
         self.assertEqual(check_dupplicates_name_dob(individuals), None)
+
+    # US01 Test
+    def test_birth_dates_after_today(self):
+        (families, individuals) = help_paser_ged(BIRTH_DATES_AFTER_TODAY)
+        self.assertEqual(check_future_dates(individuals,families), None)
+
+    def test_birth_dates_after_today(self):
+        (families, individuals) = help_paser_ged(BIRTH_DATES_AFTER_TODAY)
+        self.assertEqual(check_future_dates(individuals,families), None)
+
+    def test_death_dates_after_today(self):
+        (families, individuals) = help_paser_ged(DEATH_DATES_AFTER_TODAY)
+        self.assertEqual(check_future_dates(individuals,families), None)
+
+    def test_divorced_dates_after_today(self):
+        (families, individuals) = help_paser_ged(DIVORCED_DATE_AFTER_TODAY)
+        self.assertEqual(check_future_dates(individuals,families), None)
+
+    def test_married_dates_after_today(self):
+        (families, individuals) = help_paser_ged(MARRIED_DATE_AFTER_TODAY)
+        self.assertEqual(check_future_dates(individuals,families), None)
+
+
+    # US13 Test
+    def test_normal(self):
+        (families, individuals) = help_paser_ged(NORMAL)
+        self.assertEqual(no_more_than_five_c(families,individuals), None)
+    
+    def test_more_than_five_sibs(self):
+        (families, individuals) = help_paser_ged(MORE_THAN_FIVE_SIBLINGS)
+        self.assertEqual(no_more_than_five_c(families,individuals), None)
+    
+    def test_more_than_five_sibs(self):
+        (families, individuals) = help_paser_ged(MORE_THAN_FIVE_SIBLINGS)
+        self.assertEqual(no_more_than_five_c(families,individuals), None)
+    
+    def test_more_than_five_sibs(self):
+        (families, individuals) = help_paser_ged(MORE_THAN_FIVE_SIBLINGS)
+        self.assertEqual(no_more_than_five_c(families,individuals), None)
+
+    def test_more_than_five_sibs(self):
+        (families, individuals) = help_paser_ged(MORE_THAN_FIVE_SIBLINGS)
+        self.assertEqual(no_more_than_five_c(families,individuals), None)
 
     # US10 Test
     def test_no_marryerror(self):

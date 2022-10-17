@@ -461,6 +461,61 @@ def birth_after_death(families, individuals):
 
 
 
+
+# US01
+def check_future_dates(individuals,families):
+    ierrorlist=[]
+    ferrorlist=[]
+    Today=date.today()
+    for i in individuals:
+        if i.get_death_data()[0] != '':
+            if date.fromisoformat(datetime.datetime.strptime(i.get_death_data()[0], "%d %b %Y").strftime("%Y-%m-%d")) > Today:
+                print("ERROR: INDIVIDUAL: US01: {}: Death Date after the current date.".format(i.get_pointer()))
+
+        if date.fromisoformat(datetime.datetime.strptime(i.get_birth_data()[0], "%d %b %Y").strftime("%Y-%m-%d")) > Today:
+            print("ERROR: INDIVIDUAL: US01: {}: Birth Date after the current date.".format(i.get_pointer()))
+
+    
+    for f in families:
+        for n in f.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                married_date = datetime.datetime.strptime(n.get_child_elements()[0].get_value(), "%d %b %Y").strftime("%Y-%m-%d")
+                if date.fromisoformat(married_date) > Today:
+                    print("ERROR: INDIVIDUAL: US01: {}: Married Date after the current date.".format(f.get_pointer()))
+            if n.get_tag() == "DIV":
+                divorced_date = datetime.datetime.strptime(n.get_child_elements()[0].get_value(), "%d %b %Y").strftime("%Y-%m-%d")
+                if date.fromisoformat(divorced_date) > Today:
+                    print("ERROR: INDIVIDUAL: US01: {}: Divorced Date after the current date.".format(f.get_pointer()))
+    
+
+# US14
+def no_more_than_five_c(families,individuals):
+
+    for fam in families:
+        flag=False
+        fammem=[]
+        birth_dates=[]
+        for f in fam.get_child_elements():
+            if f.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD:
+                fammem.append(f.get_value())
+        
+        if len(fammem) >= 5:
+            for i in individuals:
+                if i.get_pointer() in fammem:
+                    birth_dates.append(datetime.datetime.strptime(i.get_birth_data()[0], "%d %b %Y").strftime("%Y-%m-%d"))
+            for each in birth_dates:
+                if birth_dates.count(each) >= 5:
+                    flag=True
+        if flag == True:
+            print("ERROR: FAMILIES: US13: {}: More than five siblings borned at the same date.".format(fam.get_pointer()))
+            #         if child == i.get_value():
+            #             birth_dates.append(datetime.datetime.strptime(i.get_birth_data()[0], "%d %b %Y").strftime("%Y-%m-%d"))
+            # print(birth_dates)     
+
+
+
+
+
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
     # DOCUMENT https://gedcom.nickreynke.dev/gedcom/index.html
@@ -496,3 +551,5 @@ if __name__ == "__main__":
     if birth_after_death(families, individuals): print(birth_after_death(families, individuals))
     if birth_before_marriage02(families,individuals): print(birth_before_marriage02(families,individuals))
     if birth_before_death03(individuals): print(birth_before_death03(individuals))
+    if no_more_than_five_c(families,individuals): print(no_more_than_five_c(families,individuals))
+    if check_future_dates(individuals,families): print(check_future_dates(individuals,families))
