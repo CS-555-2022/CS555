@@ -346,7 +346,71 @@ def birth_before_death03(individuals):
         #print(death_date, birth_date, currentname)
         if death_date != "N/A" and death_date <= birth_date:
             print( "ERROR: INDIVIDAL: US03: Birth should occur before death of an individual, NAME: {}.".format(currentname))
-    
+
+# US04
+def marry_before_divor(families,individuals):
+    for fam in families:
+        married_date = ""
+        divorced_date = "N/A"
+        husband_ID = ""
+        wife_ID = ""
+        husName = ""
+        wifeName = ""
+        for n in fam.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                married_date = datetime.datetime.strptime(n.get_child_elements()[0].get_value(), "%d %b %Y")
+            if n.get_tag() == "DIV":
+                divorced_date = datetime.datetime.strptime(n.get_child_elements()[0].get_value(), "%d %b %Y")
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                husband_ID = n.get_value()
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
+                wife_ID = n.get_value()
+        for m in individuals:
+            if m.get_pointer() == husband_ID:
+                husName = '-'.join(str(x) for x in m.get_name())
+            if m.get_pointer() == wife_ID:
+                wifeName = '-'.join(str(x) for x in m.get_name())
+        #print(married_date,divorced_date,husName,wifeName)
+        if divorced_date != "N/A" and divorced_date < married_date:
+            print( "ERROR: MAFILY: US04: Marriage should occur before divorce of spouses, and divorce can only occur after marriage, NAME: {} and {}.".format(husName, wifeName))
+
+# US06
+def divor_before_death(families,individuals):
+    for fam in families:
+        divorced_date = "N/A"
+        husband_ID = ""
+        wife_ID = ""
+        husName = ""
+        wifeName = ""
+        husDeathDate = ""
+        wifeDeathDate = ""
+        for n in fam.get_child_elements():
+            if n.get_tag() == "DIV":
+                divorced_date = datetime.datetime.strptime(n.get_child_elements()[0].get_value(), "%d %b %Y")
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                husband_ID = n.get_value()
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
+                wife_ID = n.get_value()
+        for m in individuals:
+            if m.get_pointer() == husband_ID:
+                husName = '-'.join(str(x) for x in m.get_name())
+                if m.get_death_data()[0] != "":
+                    husDeathDate = datetime.datetime.strptime(m.get_death_data()[0], "%d %b %Y")
+                else:
+                    husDeathDate = "N/A"
+            if m.get_pointer() == wife_ID:
+                wifeName = '-'.join(str(x) for x in m.get_name())
+                if m.get_death_data()[0] != "":
+                    wifeDeathDate = datetime.datetime.strptime(m.get_death_data()[0], "%d %b %Y")
+                else:
+                    wifeDeathDate = "N/A"
+        #print(divorced_date,husName,husDeathDate,wifeName,wifeDeathDate)
+        if divorced_date != "N/A" and husDeathDate != "N/A":
+            if divorced_date > husDeathDate:
+                print( "ERROR: MAFILY: US06: Divorce can only occur before death of both spouses(husband), NAME: {} and {}.".format(husName, wifeName))
+        if divorced_date != "N/A" and wifeDeathDate != "N/A":
+            if divorced_date > wifeDeathDate:
+                print( "ERROR: MAFILY: US06: Divorce can only occur before death of both spouses(wife), NAME: {} and {}.".format(husName, wifeName))    
      
 # US21 
 def correct_gender(families, individuals):
@@ -553,3 +617,5 @@ if __name__ == "__main__":
     if birth_before_death03(individuals): print(birth_before_death03(individuals))
     if no_more_than_five_c(families,individuals): print(no_more_than_five_c(families,individuals))
     if check_future_dates(individuals,families): print(check_future_dates(individuals,families))
+    if marry_before_divor(families,individuals): print(marry_before_divor(families,individuals))
+    if divor_before_death(families,individuals): print(divor_before_death(families,individuals))

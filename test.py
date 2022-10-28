@@ -8,7 +8,7 @@ from gedcom.parser import Parser
 
 from main import *
 from main import (check_dupplicates_name_dob, check_unique_families,
-                  check_unique_first_name, marry_after_14,birth_before_marriage02,birth_before_death03)
+                  check_unique_first_name, marry_after_14,birth_before_marriage02,birth_before_death03,marry_before_divor,divor_before_death)
 
 NO_CHILD_TEST_EXAMPLE = "./testged/NO_CHILD_EXAMPLE.ged"
 ONE_CHILD_TEST_EXAMPLE = "./testged/ONE_CHILD_EXAMPLE.ged"
@@ -49,6 +49,12 @@ TWO_DEATHERROR = "./testged/TWO_DeathBeforeBirth.ged"
 # US03 Test file
 ONE_MbeforeD = "./testged/ONE_MbefD.ged"
 TWO_MbeforeD = "./testged/TWO_MbefD.ged"
+# US04 Test file
+US04OneErr = "./testged/US04OneErr.ged"
+US04TwoErr = "./testged/US04TwoErr.ged"
+# US06 Test file
+US06OneErr = "./testged/US06OneErr.ged"
+US06TwoErr = "./testged/US06TwoErr.ged"
 
 # You can use this function to get families and individuals
 def help_paser_ged(ged):
@@ -194,6 +200,24 @@ class TestClass(unittest.TestCase):
     def test_two_deatherror(self):
         (families, individuals) = help_paser_ged(TWO_DEATHERROR)
         self.assertEqual(birth_before_death03(individuals), None)
+
+    # US04 Test
+    def test_one_divErr(self):
+        (families, individuals) = help_paser_ged(US04OneErr)
+        self.assertEqual(marry_before_divor(families,individuals), None)
+
+    def test_two_divErr(self):
+        (families, individuals) = help_paser_ged(US04TwoErr)
+        self.assertEqual(marry_before_divor(families,individuals), None)
+
+    # US06 Test
+    def test_one_deathErr(self):
+        (families, individuals) = help_paser_ged(US06OneErr)
+        self.assertEqual(divor_before_death(families,individuals), None)
+
+    def test_two_deathErr(self):
+        (families, individuals) = help_paser_ged(US06TwoErr)
+        self.assertEqual(divor_before_death(families,individuals), None)
 
     # US21
     def test_correct_gender(self):
