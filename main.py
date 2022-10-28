@@ -372,7 +372,7 @@ def marry_before_divor(families,individuals):
                 wifeName = '-'.join(str(x) for x in m.get_name())
         #print(married_date,divorced_date,husName,wifeName)
         if divorced_date != "N/A" and divorced_date < married_date:
-            print( "ERROR: MAFILY: US04: Marriage should occur before divorce of spouses, and divorce can only occur after marriage, NAME: {} and {}.".format(husName, wifeName))
+            print( "ERROR: FAMILY: US04: Marriage should occur before divorce of spouses, and divorce can only occur after marriage, NAME: {} and {}.".format(husName, wifeName))
 
 # US06
 def divor_before_death(families,individuals):
@@ -407,10 +407,10 @@ def divor_before_death(families,individuals):
         #print(divorced_date,husName,husDeathDate,wifeName,wifeDeathDate)
         if divorced_date != "N/A" and husDeathDate != "N/A":
             if divorced_date > husDeathDate:
-                print( "ERROR: MAFILY: US06: Divorce can only occur before death of both spouses(husband), NAME: {} and {}.".format(husName, wifeName))
+                print( "ERROR: FAMILY: US06: Divorce can only occur before death of both spouses(husband), NAME: {} and {}.".format(husName, wifeName))
         if divorced_date != "N/A" and wifeDeathDate != "N/A":
             if divorced_date > wifeDeathDate:
-                print( "ERROR: MAFILY: US06: Divorce can only occur before death of both spouses(wife), NAME: {} and {}.".format(husName, wifeName))    
+                print( "ERROR: FAMILY: US06: Divorce can only occur before death of both spouses(wife), NAME: {} and {}.".format(husName, wifeName))    
      
 # US21 
 def correct_gender(families, individuals):
