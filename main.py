@@ -576,8 +576,43 @@ def no_more_than_five_c(families,individuals):
             #             birth_dates.append(datetime.datetime.strptime(i.get_birth_data()[0], "%d %b %Y").strftime("%Y-%m-%d"))
             # print(birth_dates)     
 
-
-
+# US16
+def family_with_same_last_name(families, individuals):
+    for f in families:
+        name = ""
+        for n in f.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND or n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE or n.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD:
+                for i in individuals:
+                    if i.get_pointer() == n.get_value():
+                        if name != "" and i.get_name()[1] != name:
+                            return "ERROR: FAMILY: US16: {} family with different last name.".format(f.get_pointer())
+                        elif name == "":
+                            name = i.get_name()[1]
+    return None
+# US12
+def parents_is_not_too_old(families, individuals):
+    for f in families:
+        age = 0
+        for n in f.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD:
+                for i in individuals:
+                    if i.get_pointer() == n.get_value():
+                        birthday = datetime.datetime.strptime(i.get_birth_data()[0], "%d %b %Y")
+                        age = max(age, calculate_age(birthday))
+        for n in f.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                for i in individuals:
+                    if i.get_pointer() == n.get_value():
+                        birthday = calculate_age(datetime.datetime.strptime(i.get_birth_data()[0], "%d %b %Y"))
+                        if age != 0 and (birthday - age) > 80:
+                            return "ERROR:US12: {} family's parents is too old".format(f.get_pointer())
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
+                for i in individuals:
+                    if i.get_pointer() == n.get_value():
+                        birthday = calculate_age(datetime.datetime.strptime(i.get_birth_data()[0], "%d %b %Y"))
+                        if age != 0 and (birthday - age) > 60:
+                            return "ERROR:US12: {} family's parents is too old".format(f.get_pointer())
+    return None
 
 
 if __name__ == "__main__":
@@ -619,3 +654,5 @@ if __name__ == "__main__":
     if check_future_dates(individuals,families): print(check_future_dates(individuals,families))
     if marry_before_divor(families,individuals): print(marry_before_divor(families,individuals))
     if divor_before_death(families,individuals): print(divor_before_death(families,individuals))
+    if family_with_same_last_name(families,individuals): print(family_with_same_last_name(families, individuals))
+    if parents_is_not_too_old(families,individuals): print(parents_is_not_too_old(families, individuals))

@@ -56,6 +56,11 @@ US04TwoErr = "./testged/US04TwoErr.ged"
 US06OneErr = "./testged/US06OneErr.ged"
 US06TwoErr = "./testged/US06TwoErr.ged"
 
+# US16 test file
+DIFFERENT_NAME = "./testged/DIFFERENT_NAME.ged"
+# US12 test file
+PARENT_TOO_OLD = "./testged/PARENTS_TOO_OLD.ged"
+
 # You can use this function to get families and individuals
 def help_paser_ged(ged):
     gedcom_parser = Parser()
@@ -264,6 +269,15 @@ class TestClass(unittest.TestCase):
     def test_birth_after_death(self):
         (families, individuals) = help_paser_ged(WRONG_GENDER_EXAMPLE)
         self.assertIsNotNone(birth_after_death(families, individuals))
+
+    #US 16
+    def test_different_name(self):
+        (families, individuals) = help_paser_ged(WRONG_GENDER_EXAMPLE)
+        self.assertIsNotNone(family_with_same_last_name(families, individuals))
+    #US 16
+    def test_parent_too_ld(self):
+        (families, individuals) = help_paser_ged(PARENT_TOO_OLD)
+        self.assertIsNotNone(parents_is_not_too_old(families, individuals))
 
 
 # class test_us30_1(unittest.TestCase):
