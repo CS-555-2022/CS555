@@ -278,6 +278,49 @@ class TestClass(unittest.TestCase):
     def test_parent_too_ld(self):
         (families, individuals) = help_paser_ged(PARENT_TOO_OLD)
         self.assertIsNotNone(parents_is_not_too_old(families, individuals))
+        
+    #US 05
+    def test_marry_before_death_1(self):
+        (families, individuals) = help_paser_ged(ONE_MbeforeD)
+        self.assertEqual(marry_before_death(families,individuals), None)
+
+    def test_marry_before_death_2(self):
+        (families, individuals) = help_paser_ged(TWO_MbeforeD)
+        self.assertEqual(marry_before_death(families,individuals), None)
+        
+    def test_marry_before_death_3(self):
+        (families, individuals) = help_paser_ged(PARENT_TOO_OLD)
+        self.assertEqual(marry_before_death(families,individuals), None)
+    
+    def test_marry_before_death_4(self):
+        (families, individuals) = help_paser_ged(MORE_THAN_FIVE_SIBLINGS)
+        self.assertEqual(marry_before_death(families,individuals), None)
+        
+    def test_marry_before_death_5(self):
+        (families, individuals) = help_paser_ged(NORMAL)
+        self.assertEqual(marry_before_death(families,individuals), None)
+    
+    #US 17
+    def test_marry_descendents_1(self):
+        (families, individuals) = help_paser_ged(MORE_THAN_FIVE_SIBLINGS)
+        self.assertEqual(marry_descendants(families,individuals), None)
+    
+    def test_marry_descendents_2(self):
+        (families, individuals) = help_paser_ged(TWO_PAIRS_DUPLICATES_EXAMPLE)
+        self.assertEqual(marry_descendants(families,individuals), None)
+    
+    def test_marry_descendents_3(self):
+        (families, individuals) = help_paser_ged(ONEPAIR_MARRYERROR)
+        self.assertEqual(marry_descendants(families,individuals), None)
+    
+    def test_marry_descendents_4(self):
+        (families, individuals) = help_paser_ged(TWO_MbeforeD)
+        self.assertEqual(marry_descendants(families,individuals), None)
+    
+    def test_marry_descendents_5(self):
+        (families, individuals) = help_paser_ged(UNIQUE_ID_EXAMPLE)
+        self.assertEqual(marry_descendants(families,individuals), None)
+    
 
 
 # class test_us30_1(unittest.TestCase):

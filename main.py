@@ -7,6 +7,7 @@ from gedcom.element.element import Element
 from gedcom.element.family import FamilyElement
 from gedcom.element.individual import IndividualElement
 from gedcom.parser import Parser
+from matplotlib.pyplot import get
 from prettytable import PrettyTable
 
 # from US30_31_help_code import *
@@ -374,6 +375,47 @@ def marry_before_divor(families,individuals):
         if divorced_date != "N/A" and divorced_date < married_date:
             print( "ERROR: FAMILY: US04: Marriage should occur before divorce of spouses, and divorce can only occur after marriage, NAME: {} and {}.".format(husName, wifeName))
 
+# US05
+def marry_before_death(families, individuals):
+    for fam in families:
+        married_data = "N/A"
+        husDeathDate = "N/A"
+        wifeDeathDate = "N/A"
+        husband_ID = ""
+        wife_ID = ""
+        hus_name = ""
+        wife_name = ""
+        for n in fam.get_child_elements():
+            # print(n.get_tag())
+            # print(gedcom.tags.GEDCOM_TAG_MARRIAGE)
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                married_data = datetime.datetime.strptime(n.get_child_elements()[0].get_value(), "%d %b %Y")
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                husband_ID = n.get_value()
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
+                wife_ID = n.get_value()
+        for m in individuals:
+            if m.get_pointer() == husband_ID:
+                hus_name = '-'.join(str(x) for x in m.get_name())
+                if m.get_death_data()[0] != "":
+                    husDeathDate = datetime.datetime.strptime(m.get_death_data()[0], "%d %b %Y")
+                else:
+                    husDeathDate = "N/A"
+            if m.get_pointer() == wife_ID:
+                wife_name = '-'.join(str(x) for x in m.get_name())
+                if m.get_death_data()[0] != "":
+                    wifeDeathDate = datetime.datetime.strptime(m.get_death_data()[0], "%d %b %Y")
+                else:
+                    wifeDeathDate = "N/A"
+        
+        if married_data != "N/A" and husDeathDate != "N/A":
+            if married_data > husDeathDate:
+                print("ERROR: FAMILY: US05: Marry data can only occur before death of both spouses(husband), NAME: {} and {}.".format(hus_name, wife_name))
+        if married_data != "N/A" and wifeDeathDate != "N/A":
+            if married_data > wifeDeathDate:
+                print("ERROR: FAMILY: US05: Marry data can only occur before death of both spouses(wife), NAME: {} and {}.".format(hus_name, wife_name))
+                    
+    
 # US06
 def divor_before_death(families,individuals):
     for fam in families:
@@ -614,6 +656,37 @@ def parents_is_not_too_old(families, individuals):
                             return "ERROR:US12: {} family's parents is too old".format(f.get_pointer())
     return None
 
+#US17
+def marry_descendants(families, individuals):
+    child = set()
+    spouse = dict()
+    spouse_ID = "N/A"
+    spouse_name = "N/A"
+    error_name = "N/A"
+    for fam in families:
+        for n in fam.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD:
+              # print(n.get_value())
+                child.add(n.get_value())
+            # print(n)
+
+        
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE or n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                spouse_ID = n.get_value()
+                for m in individuals:
+                    if m.get_pointer() == spouse_ID:
+                        spouse_name = '-'.join(str(x) for x in m.get_name())
+                        spouse[spouse_ID] = spouse_name
+                      
+    for c in child:
+        if c in spouse:
+            error_name = spouse[c]    
+            print("Error: US17: Cannot marry with descendents, {} is not correct".format(error_name))
+                
+    # print("child: {}".format(child))
+    # print("spouse: {}".format(spouse))
+            
+    
 
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
@@ -656,3 +729,5 @@ if __name__ == "__main__":
     if divor_before_death(families,individuals): print(divor_before_death(families,individuals))
     if family_with_same_last_name(families,individuals): print(family_with_same_last_name(families, individuals))
     if parents_is_not_too_old(families,individuals): print(parents_is_not_too_old(families, individuals))
+    if marry_before_death(families, individuals):print(marry_before_death(families, individuals))
+    if(marry_descendants(families, individuals)): print(marry_descendants(families, individuals))
