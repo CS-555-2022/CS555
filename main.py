@@ -688,6 +688,20 @@ def marry_descendants(families, individuals):
             
     
 
+# US15
+def less_than_fift_siblings(families):
+    
+    for i in families:
+        chi=[]
+        for m in i.get_child_elements():
+            
+            if m.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD:
+                chi.append("'" + clean_id(m.get_value()) + "'")
+        if len(chi) > 15:
+            print("ERROR: FAMILIES: US15: {}: More than fifteen siblings found in one family.".format(i.get_pointer()))
+
+
+
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
     # DOCUMENT https://gedcom.nickreynke.dev/gedcom/index.html
@@ -731,3 +745,4 @@ if __name__ == "__main__":
     if parents_is_not_too_old(families,individuals): print(parents_is_not_too_old(families, individuals))
     if marry_before_death(families, individuals):print(marry_before_death(families, individuals))
     if(marry_descendants(families, individuals)): print(marry_descendants(families, individuals))
+    if less_than_fift_siblings(families): print(less_than_fift_siblings(families))

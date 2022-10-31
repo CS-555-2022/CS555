@@ -56,6 +56,8 @@ US04TwoErr = "./testged/US04TwoErr.ged"
 US06OneErr = "./testged/US06OneErr.ged"
 US06TwoErr = "./testged/US06TwoErr.ged"
 
+# US15 test file
+MORE_THAN_FIFT_SIB= "./testged/MORE_THAN_FIFT_SIB.ged"
 # US16 test file
 DIFFERENT_NAME = "./testged/DIFFERENT_NAME.ged"
 # US12 test file
@@ -187,6 +189,7 @@ class TestClass(unittest.TestCase):
     def test_onepair_marryerror(self):
         (families, individuals) = help_paser_ged(ONEPAIR_MARRYERROR)
         self.assertEqual(marry_after_14(families, individuals), None)
+
 
     # US02 Test
     def test_one_marriageerror(self):
