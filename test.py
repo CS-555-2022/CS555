@@ -327,44 +327,44 @@ class TestClass(unittest.TestCase):
     # US 38
     def test_upcoming_birth_1(self):
         (families, individuals) = help_paser_ged(MORE_THAN_FIVE_SIBLINGS)
-        self.assertEqual(upcoming_birthday(families,individuals), None)
+        self.assertEqual(upcoming_birthday(families,individuals), 0)
     
     def test_upcoming_birth_2(self):
         (families, individuals) = help_paser_ged(TWO_PAIRS_DUPLICATES_EXAMPLE)
-        self.assertEqual(upcoming_birthday(families,individuals), None)
+        self.assertEqual(upcoming_birthday(families,individuals), 0)
     
     def test_upcoming_birth_3(self):
         (families, individuals) = help_paser_ged(ONEPAIR_MARRYERROR)
-        self.assertEqual(upcoming_birthday(families,individuals), None)
+        self.assertEqual(upcoming_birthday(families,individuals), 0)
     
     def test_upcoming_birth_4(self):
         (families, individuals) = help_paser_ged(TWO_MbeforeD)
-        self.assertEqual(upcoming_birthday(families,individuals), None)
+        self.assertEqual(upcoming_birthday(families,individuals), 0)
     
     def test_marry_descendents_5(self):
         (families, individuals) = help_paser_ged(UNIQUE_ID_EXAMPLE)
-        self.assertEqual(upcoming_birthday(families,individuals), None)
+        self.assertEqual(upcoming_birthday(families,individuals), 0)
     
     # US 39
     def test_upcoming_anniversaries_1(self):
         (families, individuals) = help_paser_ged(MORE_THAN_FIVE_SIBLINGS)
-        self.assertEqual(upcoming_anniversaries(families,individuals), None)
+        self.assertEqual(upcoming_anniversaries(families,individuals), 0)
     
     def test_upcoming_anniversaries_2(self):
         (families, individuals) = help_paser_ged(TWO_PAIRS_DUPLICATES_EXAMPLE)
-        self.assertEqual(upcoming_anniversaries(families,individuals), None)
+        self.assertEqual(upcoming_anniversaries(families,individuals), 0)
     
     def test_upcoming_anniversaries_3(self):
         (families, individuals) = help_paser_ged(ONEPAIR_MARRYERROR)
-        self.assertEqual(upcoming_anniversaries(families,individuals), None)
+        self.assertEqual(upcoming_anniversaries(families,individuals), 0)
     
     def test_upcoming_anniversaries_4(self):
         (families, individuals) = help_paser_ged(TWO_MbeforeD)
-        self.assertEqual(upcoming_anniversaries(families,individuals), None)
+        self.assertEqual(upcoming_anniversaries(families,individuals), 0)
     
     def test_upcoming_anniversaries_5(self):
         (families, individuals) = help_paser_ged(UNIQUE_ID_EXAMPLE)
-        self.assertEqual(upcoming_anniversaries(families,individuals), None)
+        self.assertEqual(upcoming_anniversaries(families,individuals), 0)
 
 
 # class test_us30_1(unittest.TestCase):

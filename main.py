@@ -686,7 +686,104 @@ def marry_descendants(families, individuals):
     # print("child: {}".format(child))
     # print("spouse: {}".format(spouse))
             
+# US38 39 helper function
+def next_30_day():
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d')
+    # print(now_time)
+    now_time_li = now_time.split('-')
+    for i in range(len(now_time_li)):
+        now_time_li[i] = int(now_time_li[i])
+        
+    max_day = [31, 27, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    if now_time_li[0] % 100 == 0:
+        if now_time_li[0] % 4 == 0:
+            max_day[1] = 28
+    elif now_time_li[0] % 4 == 0:
+        max_day[1] = 28
     
+    next_day_li = now_time_li
+    mon = now_time_li[1]
+    
+    if now_time_li[2] + 30 > max_day[mon - 1]:
+        next_day_li[2] = now_time_li[2] + 30 - max_day[mon - 1]
+        next_day_li[1] = now_time_li[1] + 1
+        
+    return next_day_li
+    
+# US 38
+def upcoming_birthday(families, individuals):
+    next_day_li = next_30_day()
+    upcoming = []
+    cnt = 0
+    
+    # print(next_day_li)
+    
+    mon_data = ("", "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
+    for i in individuals:
+        # print(i.get_name())
+        death = i.get_death_year()
+        if death != -1:
+            continue    
+        else:
+            # death_date = None
+            birth = i.get_birth_data()[0]
+            bir_list = birth.split(" ")
+            if mon_data[next_day_li[1]] == bir_list[1] and next_day_li[2] == int(bir_list[0]):
+                upcoming.append(i.get_name())
+        
+        # print(bir_list)
+    
+    if len(upcoming):
+        for name in upcoming:
+            cnt += 1
+            print("All living people in a GEDCOM file whose birthdays occur in the next 30 days is: " + str(name))
+    return cnt
+
+# US39   
+def upcoming_anniversaries(families, individuals):
+    next_day_li = next_30_day()
+    # print(next_day_li)
+    upcoming = []
+    cnt = 0
+    mon_data = ("", "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
+    for fam in families:
+        wife_ID = ""
+        hus_ID = ""
+        hus_Name = ""
+        wife_Name = ""
+        married_date = ""
+        divorced_date = "N/A"
+        
+        for n in fam.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                married_date = n.get_child_elements()[0].get_value()
+                married_list = married_date.split(" ")
+                # print(married_list)
+            if n.get_tag() == "DIV":
+                divorced_date = datetime.datetime.strptime(n.get_child_elements()[0].get_value(), "%d %b %Y")
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                hus_ID = n.get_value()
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
+                wife_ID = n.get_value()
+            # print(divorced_date)
+        for m in individuals:
+            if m.get_pointer() == hus_ID:
+                husName = '-'.join(str(x) for x in m.get_name())
+            if m.get_pointer() == wife_ID:
+                wifeName = '-'.join(str(x) for x in m.get_name())
+            if divorced_date == "N/A":
+                # print("in")
+                # print(int(married_list[0]) == next_day_li[2] and mon_data[next_day_li[1]] == married_date[1])
+                if int(married_list[0]) == next_day_li[2] and mon_data[next_day_li[1]] == married_date[1]:
+                    upcoming.append("The husband name is: " + str(hus_Name) + "The wife name is: " + str(wife_Name))
+        
+    if len(upcoming):
+        for name in upcoming:
+            cnt += 1
+            print("All living couples in a GEDCOM file whose marriage anniversaries occur in the next 30 days: " + str(name))
+    
+    return cnt
+
 
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
