@@ -783,7 +783,34 @@ def upcoming_anniversaries(families, individuals):
             print("All living couples in a GEDCOM file whose marriage anniversaries occur in the next 30 days: " + str(name))
     
     return cnt
+    
+# US35
+def list_recent_birth(individuals):
+    today = datetime.datetime.now()
+    for n in individuals:
+        currentname = '-'.join(str(x) for x in n.get_name())
+        birthday = datetime.datetime.strptime(n.get_birth_data()[0], "%d %b %Y")
+        alivecount = today - birthday
+        alivedays = alivecount.days
+        #print(alivedays)
+        if alivedays <= 30:
+            print("US35: Recent birth: {}".format(currentname))
 
+# US36
+def list_recent_death(individuals):
+    today = datetime.datetime.now()
+    for n in individuals:
+        currentname = '-'.join(str(x) for x in n.get_name())
+        if n.get_death_data()[0] != "":
+            death_date = datetime.datetime.strptime(n.get_death_data()[0], "%d %b %Y")
+        else:
+            death_date = "N/A"
+        #print(death_date, currentname)
+        if death_date != "N/A":
+            deathcount = today - death_date
+            deathdays = deathcount.days
+            if deathdays <= 30:
+                print("US36: Recent death: {}".format(currentname))
 
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
@@ -828,3 +855,5 @@ if __name__ == "__main__":
     if parents_is_not_too_old(families,individuals): print(parents_is_not_too_old(families, individuals))
     if marry_before_death(families, individuals):print(marry_before_death(families, individuals))
     if(marry_descendants(families, individuals)): print(marry_descendants(families, individuals))
+    if list_recent_birth(individuals): print(list_recent_birth(individuals))
+    if list_recent_death(individuals): print(list_recent_death(individuals))

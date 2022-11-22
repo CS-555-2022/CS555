@@ -8,7 +8,8 @@ from gedcom.parser import Parser
 
 from main import *
 from main import (check_dupplicates_name_dob, check_unique_families,
-                  check_unique_first_name, marry_after_14,birth_before_marriage02,birth_before_death03,marry_before_divor,divor_before_death)
+                  check_unique_first_name, marry_after_14,birth_before_marriage02,birth_before_death03,
+                  marry_before_divor,divor_before_death,list_recent_birth,list_recent_death)
 
 NO_CHILD_TEST_EXAMPLE = "./testged/NO_CHILD_EXAMPLE.ged"
 ONE_CHILD_TEST_EXAMPLE = "./testged/ONE_CHILD_EXAMPLE.ged"
@@ -62,6 +63,10 @@ MORE_THAN_FIFT_SIB= "./testged/MORE_THAN_FIFT_SIB.ged"
 DIFFERENT_NAME = "./testged/DIFFERENT_NAME.ged"
 # US12 test file
 PARENT_TOO_OLD = "./testged/PARENTS_TOO_OLD.ged"
+
+# US35&36 Test file
+US35TwoBirth = "./testged/US35TwoBirth.ged"
+US36TwoDeath = "./testged/US36TwoDeath.ged"
 
 # You can use this function to get families and individuals
 def help_paser_ged(ged):
@@ -365,6 +370,15 @@ class TestClass(unittest.TestCase):
     def test_upcoming_anniversaries_5(self):
         (families, individuals) = help_paser_ged(UNIQUE_ID_EXAMPLE)
         self.assertEqual(upcoming_anniversaries(families,individuals), 0)
+
+    # US35&36 Test
+    def test_recent_birth(self):
+        (families, individuals) = help_paser_ged(US35TwoBirth)
+        self.assertEqual(list_recent_birth(individuals), None)
+
+    def test_recent_death(self):
+        (families, individuals) = help_paser_ged(US36TwoDeath)
+        self.assertEqual(list_recent_death(individuals), None)
 
 
 # class test_us30_1(unittest.TestCase):
