@@ -68,6 +68,9 @@ PARENT_TOO_OLD = "./testged/PARENTS_TOO_OLD.ged"
 US35TwoBirth = "./testged/US35TwoBirth.ged"
 US36TwoDeath = "./testged/US36TwoDeath.ged"
 
+# US18 Test file
+US18TestFile = "./testged/TWO_CHILDERN_MARRIED.ged"
+
 # You can use this function to get families and individuals
 def help_paser_ged(ged):
     gedcom_parser = Parser()
@@ -379,6 +382,19 @@ class TestClass(unittest.TestCase):
     def test_recent_death(self):
         (families, individuals) = help_paser_ged(US36TwoDeath)
         self.assertEqual(list_recent_death(individuals), None)
+
+    #US 28 test
+    def test_list_chilrend_by_age(self):
+        (families, individuals) = help_paser_ged(
+            TWO_CHILDREN_WITHOUT_SAME_NAME_TEST_EXAMPLE
+        )
+        l = list_slibilings_by_age(families, individuals).get("@F1@")
+        self.assertGreaterEqual(l[0][0], l[1][0])
+
+    #US 18 test
+    def test_sibilings_should_not_marry(self):
+        (families, individuals) = help_paser_ged(US18TestFile)
+        self.assertEqual(sibling_should_not_marry(families, individuals), None)
 
 
 # class test_us30_1(unittest.TestCase):

@@ -811,6 +811,46 @@ def list_recent_death(individuals):
             deathdays = deathcount.days
             if deathdays <= 30:
                 print("US36: Recent death: {}".format(currentname))
+#US 28
+def list_slibilings_by_age(families, individuals):
+    result = {}
+    for fam in families:
+        child = []
+        for n in fam.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD:
+                for m in individuals:
+                    if m.get_pointer() == n.get_value():
+                        birthday = datetime.datetime.strptime(m.get_birth_data()[0], "%d %b %Y")
+                        age = calculate_age(birthday)
+                        if age != None:
+                            child.append([age, " ".join(m.get_name())])
+        sorted(child, reverse=True)
+        result[fam.get_pointer()] = child
+    if result:
+        return result
+    else:
+        return None
+#US 18
+def sibling_should_not_marry(families, individuals):
+    cache = []
+    for fam in families:
+        child = []
+        for n in fam.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD:
+                child.append(n.get_value())
+        cache.append(child)
+    for fam in families:
+        husband = None
+        wife = None
+        for n in fam.get_child_elements():
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND:
+                husband = n.get_pointer()
+            if n.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE:
+                wife = n.get_pointer()
+                husband = n.get_pointer()
+        for c in cache:
+            if husband in c and wife in c:
+                return "US18: Sibilings should not marry: {}".format(fam.get_pointer())
 
 if __name__ == "__main__":
     # Using python-gedcom to parse GEDCOM file.
@@ -857,3 +897,5 @@ if __name__ == "__main__":
     if(marry_descendants(families, individuals)): print(marry_descendants(families, individuals))
     if list_recent_birth(individuals): print(list_recent_birth(individuals))
     if list_recent_death(individuals): print(list_recent_death(individuals))
+    if list_slibilings_by_age(families , individuals): print(list_slibilings_by_age(families,individuals))
+    if sibling_should_not_marry(families, individuals): print(sibling_should_not_marry(families,individuals))
